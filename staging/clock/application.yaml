@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: clock
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: staging
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: staging
+    notifications.argoproj.io/subscribe.on-sync-status-unknown.slack: staging
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: staging
+    notifications.argoproj.io/subscribe.on-deployed.slack: staging
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:0toalpha/argocd-example.git
+    targetRevision: HEAD
+    path: "staging/clock/templates"
+  destination: 
+    server: https://kubernetes.default.svc
+    namespace: example
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true

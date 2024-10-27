@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: clock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clock
+  template:
+    metadata:
+      labels:
+        app: clock
+    spec:
+      containers:
+        - name: clock
+          image: 0toalpha/clock:0.1.0
+          imagePullPolicy: Always
+          env:
+            - name: MESSAGE
+              value: "Hello World"
+            - name: AXIOM_DATASET
+              valueFrom:
+                secretKeyRef:
+                  name: axiom
+                  key: dataset
+            - name: AXIOM_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: axiom
+                  key: token
+            - name: AXIOM_ORG_ID
+              valueFrom:
+                secretKeyRef:
+                  name: axiom
+                  key: orgId
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: 0.25
+            limits:
+              memory: "256Mi"
+              cpu: 0.5
+      imagePullSecrets:
+        - name: dockerhub
+      restartPolicy: Always
+      hostNetwork: false

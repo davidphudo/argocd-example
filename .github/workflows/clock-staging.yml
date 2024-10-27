@@ -1,0 +1,17 @@
+name: ArgoCD Clock Staging
+on:
+  repository_dispatch:
+    types: [clock-staging]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Clock Update Image Version
+      id: imgupd-clock-staging
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq eval '.spec.template.spec.containers[0].image = "${{ github.event.client_payload.image }}"' -i staging/clock/templates/deployment.yaml
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Apply image ${{ github.event.client_payload.image }}
