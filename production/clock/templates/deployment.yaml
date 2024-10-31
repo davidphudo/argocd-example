@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: clock
-          image: 0toalpha/clock:0.1.0
+          image: 0toalpha/clock:0.3.0
           imagePullPolicy: Always
           env:
             - name: MESSAGE
